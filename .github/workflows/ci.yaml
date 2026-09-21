@@ -3,7 +3,7 @@ name: CoderCo Docker Build and Push
 on:
   push:
     paths:
-      - 'projects/hello-app/**'
+      - '08-cicd/projects/hello-app/**'
 
 jobs:
   build-and-push:
@@ -22,6 +22,4 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v4
         with:
-          context: ./projects/hello-app
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/hello-app:latest
+          context:
