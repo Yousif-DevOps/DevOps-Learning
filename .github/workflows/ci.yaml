@@ -1,35 +1,27 @@
-name: CoderCo Combined
+name: CoderCo Docker Build and Push
 
-on: [push]
+on:
+  push:
+    paths:
+      - 'projects/hello-app/**'
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        python-version: ["3.8", "3.9", "3.10"]
-
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: setup python
-        uses: actions/setup-python@v2
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: install dependencies
-        run: |
-          cd 08-cicd/labs/chapter4
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-      - name: run tests
-        run: |
-          cd 08-cicd/labs/chapter4
-          python -m unittest discover
-
-      - name: notify us of success
-        run: echo "Tests passed on Python ${{ matrix.python-version }}"
-        if: success()
+      - name: Build and push image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./projects/hello-app
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/hello-app:latest
