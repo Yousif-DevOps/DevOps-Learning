@@ -22,4 +22,6 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v4
         with:
-          context:
+          context: ./08-cicd/projects/hello-app
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/hello-app:latest
