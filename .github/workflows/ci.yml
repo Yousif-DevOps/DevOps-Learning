@@ -1,0 +1,25 @@
+name: Task 1 - CI Lint and Test
+
+on: [push]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: pip install flake8 pytest
+
+      - name: Run lint
+        run: flake8 08-cicd/projects/Task1/app.py --max-line-length=100
+
+      - name: Run tests
+        working-directory: 08-cicd/projects/Task1
+        run: pytest test_app.py
